@@ -36,13 +36,13 @@ namespace LeaveTracker.API.Controllers
                 return NotFound();
             }
 
-            return Ok(leavesFromRepo);
+            return Ok(leavesFromRepo);  
 
         }
 
         // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{leaveId}")]
+        public ActionResult<Leave> GetLeaveForAuthor(string empId, Guid leaveId)
         {
             return "value";
         }
