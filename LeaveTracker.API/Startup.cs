@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using LeaveTracker.API.DbContexts;
 using LeaveTracker.API.Repository;
+using AutoMapper;
 
 namespace LeaveTracker.API
 {
@@ -30,12 +31,15 @@ namespace LeaveTracker.API
         {
             services.AddControllers();
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddScoped<ILeavesTrackerRepo, LeavesTrackerRepo>();
             services.AddDbContext<LeaveTrackerDbContext>(options =>
             {
                 options.UseSqlServer(
                     @"Server=(localdb)\mssqllocaldb;Database=LeaveTrackerDB;Trusted_Connection=True;");
             });
+
 
             
         }

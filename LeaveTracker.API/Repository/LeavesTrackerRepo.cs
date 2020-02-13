@@ -16,15 +16,6 @@ namespace LeaveTracker.API.Repository
             _context = leaveTrackerDbContext;
         }
 
-        public void AddLeave(string EmpId, Leave leave)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteLeave(Leave leave)
-        {
-            throw new NotImplementedException();
-        }
 
         public bool EmployeeExists(string EmpId)
         {
@@ -51,7 +42,23 @@ namespace LeaveTracker.API.Repository
 
         public Leave GetLeave(string EmpId, Guid LeaveEntryId)
         {
-            throw new NotImplementedException();
+            if (String.IsNullOrWhiteSpace(EmpId))
+            {
+                throw new ArgumentNullException(nameof(EmpId));
+            };
+
+            if (LeaveEntryId == null)
+            {
+                throw new ArgumentNullException(nameof(LeaveEntryId));
+            };
+
+            var leave = _context.Leaves.FirstOrDefault(l => l.LeaveEntryId == LeaveEntryId && l.EmpId == EmpId);
+
+             //List<int> enumValues =  default(LeaveStatus).GetType().GetEnumValues();
+            
+
+            return leave;
+
         }
 
         public IEnumerable<Leave> GetLeaves(string EmpId)
@@ -60,7 +67,33 @@ namespace LeaveTracker.API.Repository
             {
                 throw new ArgumentNullException(nameof(EmpId));
             }
-            return _context.Leaves.Where(l => l.EmpId == EmpId);
+            return _context.Leaves.Where(l => l.EmpId == EmpId).ToList();
+        }
+
+        public void AddLeave(string empId, Leave leave)
+        {
+            if(empId == null)
+            {
+                throw new ArgumentNullException(nameof(empId));
+            }
+            if(leave == null)
+            {
+                throw new ArgumentNullException(nameof(leave));
+            }
+
+            leave.EmpId = empId;
+
+            leave.LeaveEntryAddedOrUpdatedTime = DateTime.Now;
+
+            leave.Status = LeaveStatus.Pending;
+
+            _context.Leaves.Add(leave);
+
+        }
+
+        public void DeleteLeave(Leave leave)
+        {
+            _context.Leaves.Remove(leave);
         }
 
         public bool Save()

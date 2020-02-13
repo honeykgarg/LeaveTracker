@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LeaveTracker.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LeaveTracker.API.DbContexts
 {
@@ -19,7 +20,10 @@ namespace LeaveTracker.API.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>().HasData(
+            var converter = new EnumToStringConverter<LeaveStatus>();
+
+            modelBuilder.Entity<Employee>()
+                .HasData(
                 new Employee()
                 {
                     EmpId = "1801942",
@@ -33,6 +37,10 @@ namespace LeaveTracker.API.DbContexts
                     EmailId = "hkumar27@dxc.com"
                 }
             );
+            modelBuilder.Entity<Leave>()
+                .Property(e => e.Status)
+                .HasConversion(converter);
+
             modelBuilder.Entity<Leave>().HasData(
                 new Leave()
                 {
